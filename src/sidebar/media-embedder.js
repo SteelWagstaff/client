@@ -123,7 +123,7 @@ var embedGenerators = [
 
   // Matches iFrame embed code produced by H5P activities
   function h5pEmbedFromLink(link) {
-    if (link.pathname.toLowerCase().indexOf('admin-ajax.php?action=h5p_embed&id=') !== -1 || link.pathname.toLowerCase().indexOf('h5p/embed/') !== -1) {
+    if (link.href.toLowerCase().indexOf('wp-admin/admin-ajax.php?action=h5p_embed&id=') !== -1 || link.pathname.toLowerCase().indexOf('h5p/embed/') !== -1) {
       return appendResizer(iframe(link.href.toLowerCase()));
     }
     return null;
