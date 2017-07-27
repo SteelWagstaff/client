@@ -36,6 +36,18 @@ function vimeoEmbed(id) {
 }
 
 /**
+ * Appends resizer script for embedded H5P activities.
+ */
+function appendResizer(iFrame) {
+  var resizer = document.createElement('script');
+  resizer.type = 'text/javascript';
+  resizer.src = 'https://h5p.org/sites/all/modules/h5p/library/js/h5p-resizer.js';
+  resizer.charset = 'UTF-8';
+  iFrame.appendChild(resizer);
+  return iFrame;
+}
+
+/**
  * A list of functions that return an "embed" DOM element (e.g. an <iframe> or
  * an html5 <audio> element) for a given link.
  *
@@ -103,12 +115,19 @@ var embedGenerators = [
 
   // Matches URLs that end with .mp3, .ogg, or .wav (assumed to be audio files)
   function html5audioFromMp3Link(link) {
-    if (link.pathname.endsWith('.mp3') || link.pathname.endsWith('.ogg') || link.pathname.endsWith('.wav')) {
-      return audioElement(link.href);
+    if (link.pathname.toLowerCase().endsWith('.mp3') || link.pathname.toLowerCase().endsWith('.ogg') || link.pathname.toLowerCase().endsWith('.wav')) {
+      return audioElement(link.href.toLowerCase());
     }
     return null;
   },
 
+  // Matches iFrame embed code produced by H5P activities
+  function h5pEmbedFromLink(link) {
+    if (link.pathname.toLowerCase().indexOf('admin-ajax.php?action=h5p_embed&id=') !== -1 || link.pathname.toLowerCase().indexOf('h5p/embed/') !== -1) {
+      return appendResizer(iframe(link.href.toLowerCase()));
+    }
+    return null;
+  },
 ];
 
 /**
